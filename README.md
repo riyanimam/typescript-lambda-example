@@ -3,13 +3,13 @@
 This folder contains a small, opinionated TypeScript project scaffold suitable for AWS Lambda functions.
 
 Files created
+
 - `src/handler.ts` — example Lambda handler and `processEvent` helper
 - `src/utils/logger.ts` — tiny logging wrapper
 - `tests/handler.test.ts` — Jest test for `processEvent`
 - `tsconfig.json` — TypeScript config
 - `jest.config.js` — Jest + ts-jest configuration
 - `package.json` — build/test scripts
-
 
 Getting started
 

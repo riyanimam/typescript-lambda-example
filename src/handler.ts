@@ -5,7 +5,7 @@ export const processEvent = (payload: Record<string, unknown>) => {
   log('processEvent input:', payload);
   return {
     message: 'processed',
-    input: payload
+    input: payload,
   } as const;
 };
 
@@ -14,6 +14,6 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
   const result = processEvent(body);
   return {
     statusCode: 200,
-    body: JSON.stringify(result)
+    body: JSON.stringify(result),
   };
 };

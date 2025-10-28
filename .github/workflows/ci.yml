@@ -32,3 +32,15 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Package Lambda artifact
+        run: |
+          # create a zip containing the built code and runtime deps
+          zip -r lambda-package-${{ matrix.node-version }}.zip dist package.json package-lock.json node_modules || true
+        shell: bash
+
+      - name: Upload Lambda package
+        uses: actions/upload-artifact@v4
+        with:
+          name: lambda-package-${{ matrix.node-version }}
+          path: lambda-package-${{ matrix.node-version }}.zip
