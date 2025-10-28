@@ -3,6 +3,7 @@
 This small example shows an AWS Lambda handler written in TypeScript using ESM (.mts) that receives SQS events where each SQS message body is an S3 notification event.
 
 Files added
+
 - `tsconfig.json` — TypeScript configuration using NodeNext/ESM and output to `dist`
 - `src/handler.mts` — ESM Lambda handler; parses SQS message bodies as S3 events and logs bucket/key
 
@@ -21,8 +22,10 @@ npm run build
 ```
 
 Notes
+
 - The handler expects each SQS message body to be the S3 event JSON (the shape S3 sends when configured to send notifications to SQS).
 - If you want Lambda to fail and cause the SQS message to be retried, rethrow an error from the handler instead of catching JSON parse errors.
+
 # TypeScript Lambda Example
 
 This folder contains a small, opinionated TypeScript project scaffold suitable for AWS Lambda functions.
@@ -101,6 +104,7 @@ if present), decodes URL-encoded S3 object keys, and demonstrates fetching the
 object with `@aws-sdk/client-s3`.
 
 ESM and typings
+
 - This project uses Node ESM semantics: `package.json` contains `"type": "module"`.
 - TypeScript is configured with `module: "NodeNext"` and `moduleResolution: "nodenext"` in `tsconfig.json`.
 - Because of `nodenext` resolution, local imports need explicit file extensions in source files (for example `import { foo } from './bar.js'`). TypeScript will resolve `.ts` during compile and will emit `.js` imports for runtime.

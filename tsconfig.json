@@ -8,12 +8,13 @@
     "declaration": true,
     "declarationDir": "dist/types",
     "strict": true,
+    "isolatedModules": true,
     "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "aws-lambda"]
+    "types": ["node", "aws-lambda", "jest"]
   },
   "include": ["src/**/*.ts", "src/**/*.mts"],
   "exclude": ["node_modules", "dist"]
