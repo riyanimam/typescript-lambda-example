@@ -15,7 +15,7 @@ Build & test
 npm install
 ```
 
-2. Build (emit JS to `dist`):
+1. Build (emit JS to `dist`):
 
 ```bash
 npm run build
@@ -26,7 +26,7 @@ Notes
 - The handler expects each SQS message body to be the S3 event JSON (the shape S3 sends when configured to send notifications to SQS).
 - If you want Lambda to fail and cause the SQS message to be retried, rethrow an error from the handler instead of catching JSON parse errors.
 
-# TypeScript Lambda Example
+## TypeScript Lambda Example
 
 This folder contains a small, opinionated TypeScript project scaffold suitable for AWS Lambda functions.
 
@@ -41,7 +41,7 @@ Files created
 
 Getting started
 
-Prerequisites: Node >= 14 (recommended 18+), npm
+Prerequisites: Node >= 20 (Lambda runtime: nodejs20.x), npm
 
 Install dependencies
 
@@ -71,7 +71,7 @@ npm run format
 
 Continuous Integration
 
-A GitHub Actions workflow is included at `.github/workflows/ci.yml` — it runs install, build, lint and tests on push/PR for Node 18 and 20.
+A GitHub Actions workflow is included at `.github/workflows/ci.yml` — it runs install, build, lint and tests on push/PR for Node 20.
 
 Packaging for Lambda
 
@@ -119,9 +119,9 @@ npm run build
 npm test
 ```
 
-Deployment notes
+- Deployment notes
 
-- The compiled Lambda entrypoint is `dist/handler.js`. Deploy to a Node 18/20 runtime that supports ESM. Ensure your deployment tooling preserves the package layout and `package.json` `type` field.
+- The compiled Lambda entrypoint is `dist/handler.js`. Deploy to a Node 20 runtime (`nodejs20.x`) that supports ESM. Ensure your deployment tooling preserves the package layout and `package.json` `type` field.
 - For large objects, stream processing is recommended rather than loading the full object into memory.
 
 Example S3 notification JSON structure expected in the SQS message body:

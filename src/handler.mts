@@ -2,10 +2,8 @@ import type { SQSEvent, SQSRecord, Context } from "aws-lambda";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { parse } from "csv-parse";
 import { Pool } from "pg";
-import { pipeline } from "stream";
-import { promisify } from "util";
-
-const pipelineAsync = promisify(pipeline);
+// Use the promise-native pipeline available in Node 16.7+/18+/20
+import { pipeline } from 'stream/promises';
 
 // Environment/config expectations (set in Lambda configuration):
 // - PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD
@@ -65,9 +63,10 @@ async function processS3Object(bucket: string, key: string): Promise<number> {
   try {
     await client.query("BEGIN");
 
-    // We'll read from parser as async iterator
-    // pipeline body -> parser ensures proper stream handling
-    void pipelineAsync(body as NodeJS.ReadableStream, parser);
+  // We'll read from parser as async iterator
+  // pipeline body -> parser ensures proper stream handling
+  // Start the pipeline and keep its promise so we can await it later and surface stream errors.
+  const pipelinePromise = pipeline(body as NodeJS.ReadableStream, parser);
 
     let batch: unknown[] = [];
     for await (const record of parser as AsyncIterable<
@@ -85,6 +84,9 @@ async function processS3Object(bucket: string, key: string): Promise<number> {
       await insertBatch(client, batch);
       totalInserted += batch.length;
     }
+
+    // Await pipeline completion to capture any stream errors that may have occurred.
+    await pipelinePromise;
 
     await client.query("COMMIT");
     return totalInserted;

@@ -15,7 +15,7 @@
     "prepare": "npm run build"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.515.0",
