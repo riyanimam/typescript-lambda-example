@@ -16,6 +16,6 @@
     "allowSyntheticDefaultImports": true,
     "types": ["node", "aws-lambda", "jest"]
   },
-  "include": ["src/**/*.ts", "src/**/*.mts"],
+  "include": ["src/**/*.ts", "src/**/*.mts", "src/handler.mts"],
   "exclude": ["node_modules", "dist"]
 }
