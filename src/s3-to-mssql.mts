@@ -1,8 +1,8 @@
-import type { SQSEvent, Context } from "aws-lambda";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { pipeline } from "node:stream/promises";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import type { Context, SQSEvent } from "aws-lambda";
 import csv from "csv-parser";
 import * as sql from "mssql";
-import { pipeline } from "stream/promises";
 
 // Use the promise-native pipeline helpers if needed (not required here)
 // Environment/config expectations (set in Lambda configuration):

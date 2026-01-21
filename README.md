@@ -9,9 +9,9 @@ S3-to-PostgreSQL CSV processing, comprehensive testing, and automated code quali
 - **AWS SDK v3**: Modern AWS integrations with S3, SQS event handling
 - **PostgreSQL Integration**: Batch CSV ingestion from S3 to PostgreSQL
 - **Production-Ready**: Error handling, retries, configurable batch processing
-- **Code Quality**: Pre-commit hooks, ESLint, Prettier, automated CI/CD
+- **Code Quality**: Biome for linting/formatting, Lefthook for git hooks, automated CI/CD
 - **Type Safety**: Full TypeScript types with AWS Lambda event definitions
-- **Testing**: Jest with ESM support and AWS SDK mocking
+- **Testing**: Vitest with native ESM support and AWS SDK mocking
 
 ## Prerequisites
 
@@ -42,14 +42,17 @@ npm run build
 npm test
 
 # Watch mode for development
-npm run test:dev
+npm run test:watch
 ```
 
 ### Lint and Format
 
 ```bash
-# Lint code
+# Check code with Biome
 npm run lint
+
+# Auto-fix issues
+npm run lint:fix
 
 # Format code
 npm run format
@@ -133,31 +136,32 @@ import { myFunction } from "./utils.mjs"; // Note .mjs extension
 
 ## Development Workflow
 
-### Pre-commit Hooks
+### Git Hooks with Lefthook
 
-Install pre-commit hooks to automatically check code quality:
+Git hooks are automatically installed when you run `npm install`. They will:
+
+**Pre-commit:**
+
+- Run Biome linter and formatter on staged files
+- Lint markdown files
+- Remove trailing whitespace
+
+**Pre-push:**
+
+- Run tests
+- Build the project
+
+Manual hook execution:
 
 ```bash
-pre-commit install
-```
-
-Hooks run on every commit:
-
-- ESLint (TypeScript linting)
-- Prettier (code formatting)
-- Markdown linting
-- YAML validation
-- Trailing whitespace and EOF fixes
-
-### Manual Pre-commit Checks
+Manual hook execution:
 
 ```bash
-# Run all hooks
-pre-commit run --all-files
+# Run pre-commit checks
+npx lefthook run pre-commit
 
-# Run specific hook
-pre-commit run eslint --all-files
-```
+# Run pre-push checks
+npx lefthook run pre-push
 
 ## Deployment
 

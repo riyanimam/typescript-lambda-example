@@ -1,28 +1,27 @@
-import { Readable } from "stream";
+import { Readable } from "node:stream";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import sinon from "sinon";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Import the handler source (ESM .mts)
-import { handler } from "../src/handler.mts";
+import { handler } from "../src/handler.mjs";
 
 describe("handler ESM tests", () => {
   const s3Mock = mockClient(S3Client);
-  let poolConnectStub: sinon.SinonStub;
+  let poolConnectStub: any;
   let fakeClient: any;
 
   beforeEach(async () => {
     s3Mock.reset();
 
     fakeClient = {
-      query: sinon.stub().resolves({}),
-      release: sinon.stub().returns(undefined),
-    } as any;
+      query: vi.fn().mockResolvedValue({}),
+      release: vi.fn().mockReturnValue(undefined),
+    };
 
     // stub Pool.prototype.connect to return our fake client
     const pg = await import("pg");
-    // pg may be a namespace with Pool on it
-    poolConnectStub = sinon.stub(pg.Pool.prototype, "connect").resolves(fakeClient);
+    poolConnectStub = vi.spyOn(pg.Pool.prototype, "connect").mockResolvedValue(fakeClient);
 
     process.env.PGDATABASE = "testdb";
     process.env.PGHOST = "localhost";
@@ -34,10 +33,10 @@ describe("handler ESM tests", () => {
   });
 
   afterEach(() => {
-    poolConnectStub.restore();
+    poolConnectStub.mockRestore();
   });
 
-  test("downloads CSV from S3 and inserts rows into Postgres in batches", async () => {
+  it("downloads CSV from S3 and inserts rows into Postgres in batches", async () => {
     const csv = "name,age\nAlice,30\nBob,25\nCharlie,40\n";
     s3Mock.on(GetObjectCommand).resolves({ Body: Readable.from([csv]) as any });
 
@@ -56,17 +55,14 @@ describe("handler ESM tests", () => {
 
     await handler(sqsEvent, {} as any);
 
-    const calls = fakeClient.query.getCalls();
+    const calls = fakeClient.query.mock.calls;
     // filter to only INSERT queries since BEGIN/COMMIT are also executed
     const insertCalls = calls.filter(
-      (c: any) => typeof c.args[0] === "string" && c.args[0].startsWith("INSERT")
+      (c: any) => typeof c[0] === "string" && c[0].startsWith("INSERT")
     );
     // Accept either 1 call that inserted all rows, or multiple batched calls. Validate total rows inserted = 3
     expect(insertCalls.length).toBeGreaterThanOrEqual(1);
-    const totalInserted = insertCalls.reduce(
-      (s: number, c: any) => s + (c.args[1]?.length ?? 0),
-      0
-    );
+    const totalInserted = insertCalls.reduce((s: number, c: any) => s + (c[1]?.length ?? 0), 0);
     expect(totalInserted).toBe(3);
   });
 });

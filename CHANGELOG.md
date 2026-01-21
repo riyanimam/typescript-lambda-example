@@ -8,20 +8,37 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced ESLint and Prettier with Biome for unified linting and formatting
+- Replaced Jest with Vitest for faster, native ESM testing
+- Replaced Python pre-commit with Lefthook (Node.js-based git hooks)
+- Updated all workflows and documentation to use new tooling
+
 ### Added
+
+- Biome configuration (biome.json)
+- Vitest configuration (vitest.config.mts)
+- Lefthook configuration (lefthook.yml)
+
+### Removed
+
+- ESLint configuration and dependencies
+- Prettier configuration and dependencies
+- Jest configuration and dependencies
+- Python pre-commit configuration
+
+## [0.1.0] - 2026-01-20
 
 - Initial TypeScript Lambda example with ESM support
 - S3 to PostgreSQL CSV processing Lambda handler
 - SQS event processing with S3 notification parsing
 - AWS SDK v3 client integrations
-- Pre-commit hooks for code quality (ESLint, Prettier, Markdown)
+- Git hooks for code quality
 - Comprehensive development documentation
 - CI/CD workflows for automated testing and quality checks
 - TypeScript configuration for ESM with NodeNext module resolution
-- Jest testing setup with ESM support
-
-## [0.1.0] - Initial Release
-
+- Testing setup with AWS SDK mocking
 - TypeScript Lambda handler using ESM (.mts files)
 - S3 CSV to PostgreSQL ingestion pipeline
 - Batch insertion with configurable batch size

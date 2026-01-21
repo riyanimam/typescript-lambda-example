@@ -7,7 +7,6 @@ This guide covers local development setup and workflows for the TypeScript Lambd
 - **Node.js** >= 20 (LTS recommended)
 - **npm** >= 9
 - **Git** >= 2.30
-- **pre-commit** (optional but recommended): `brew install pre-commit` or `pip install pre-commit`
 
 ## Getting Started
 
@@ -19,13 +18,15 @@ cd typescript-lambda-example
 npm install
 ```
 
-### 2. Install Pre-commit Hooks (Recommended)
+### 2. Install Git Hooks (Automatic)
+
+Lefthook hooks are automatically installed during `npm install` via the `prepare` script.
+
+To manually install or update hooks:
 
 ```bash
-pre-commit install
+npx lefthook install
 ```
-
-This will automatically run linting, formatting, and validation checks before each commit.
 
 ### 3. Build the Project
 
@@ -43,46 +44,43 @@ TypeScript files in `src/` are compiled to JavaScript in `dist/` using the ESM m
 # Run all tests
 npm test
 
-# Run tests in watch mode for development
-npm run test:dev
+# Run tests in watch mode
+npm run test:watch
 
 # Run tests with coverage
-npm test -- --coverage
+npm run test:coverage
 ```
 
 ### Code Quality
 
-#### Linting
+#### Linting and Formatting with Biome
+
+Biome is an all-in-one toolchain that handles linting, formatting, and import organization.
 
 ```bash
-# Check for linting errors
+# Check for issues (linting + formatting)
 npm run lint
 
-# Auto-fix linting issues
-npm run lint -- --fix
-```
+# Auto-fix issues
+npm run lint:fix
 
-#### Formatting
-
-```bash
-# Format all files
+# Format code only
 npm run format
 
-# Check formatting without making changes
-npx prettier --check .
+# Check formatting without changes
+npm run format:check
 ```
 
 ### Manual Pre-commit Checks
 
+```bashHook Checks
+
 ```bash
 # Run all pre-commit hooks manually
-pre-commit run --all-files
+npx lefthook run pre-commit
 
-# Run specific hook
-pre-commit run eslint --all-files
-pre-commit run prettier --all-files
-```
-
+# Run all pre-push hooks manually
+npx lefthook run pre-push
 ## Project Structure
 
 ```text
@@ -91,17 +89,16 @@ typescript-lambda-example/
 │   ├── handler.mts        # Main Lambda handler
 │   └── s3-to-mssql.mts    # Additional handlers/utilities
 ├── tests/                  # Jest tests
+│   └── handler.test.mtsVitest tests
 │   └── handler.test.mts
 ├── dist/                   # Compiled JavaScript output
 ├── .github/workflows/      # CI/CD workflows
 ├── package.json           # Dependencies and scripts
 ├── tsconfig.json          # TypeScript configuration (ESM)
-├── tsconfig.jest.json     # TypeScript config for Jest
-├── jest.config.cjs        # Jest configuration
-├── .eslintrc.json         # ESLint rules
-├── .prettierrc            # Prettier formatting rules
-└── .pre-commit-config.yaml # Pre-commit hooks
-```
+├── vitest.config.mts      # Vitest configuration
+├── biome.json             # Biome linter/formatter config
+├── lefthook.yml           # Git hooks configuration
+└── .markdownlintrc.json   # Markdown linting rule
 
 ## TypeScript and ESM
 
@@ -188,19 +185,22 @@ If you see `ERR_MODULE_NOT_FOUND`:
 
 ### Jest Test Failures
 
-- ESM tests require `--experimental-vm-modules` flag
-- Use `npm run test:dev` for debugging
-- Check `tsconfig.jest.json` for test-specific TypeScript config
+- ESVitest Test Failures
 
-### Pre-commit Hook Failures
+- Check `vitest.config.mts` for test-specific configurations
+- Use `npm run test:watch` for debugging with watch mode
+- Vitest runs natively with ESM, no experimental flags needed
 
-- Run `pre-commit run --all-files` to see all issues
-- Auto-fix with `npm run lint -- --fix` and `npm run format`
-- Update hooks: `pre-commit autoupdate`
+### Lefthook Hook Failures
 
-## Resources
+- Run `npx lefthook run pre-commit` to see all issues
+- Auto-fix with `npm run lint:fix` and `npm run format`
+- Update hooks: `npx lefthook install
 
 - [AWS Lambda TypeScript](https://docs.aws.amazon.com/lambda/latest/dg/lambda-typescript.html)
 - [TypeScript ESM Documentation](https://www.typescriptlang.org/docs/handbook/esm-node.html)
 - [AWS SDK for JavaScript v3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/)
 - [Jest with ESM](https://jestjs.io/docs/ecmascript-modules)
+Vitest Documentation](<https://vitest.dev/>)
+- [Biome Documentation](https://biomejs.dev/)
+- [Lefthook Documentation](<https://github.com/evilmartians/lefthook>

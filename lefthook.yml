@@ -1,0 +1,24 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome-check:
+      glob: "*.{ts,mts,js,mjs,json}"
+      run: npx biome check --write {staged_files}
+      stage_fixed: true
+    markdown-lint:
+      glob: "*.md"
+      run: npx markdownlint --fix {staged_files}
+      stage_fixed: true
+    trailing-whitespace:
+      run: |
+        git diff --cached --name-only --diff-filter=ACM | while read -r file; do
+          sed -i 's/[[:space:]]*$//' "$file"
+        done
+      stage_fixed: true
+
+pre-push:
+  commands:
+    tests:
+      run: npm test
+    build:
+      run: npm run build
