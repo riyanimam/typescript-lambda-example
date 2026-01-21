@@ -5,22 +5,8 @@ module.exports = {
   transform: {
     "^.+\\.(ts|mts|tsx)$": ["ts-jest", { useESM: true }],
   },
-  testMatch: [
-    "**/tests/**/*.test.mts",
-    "**/tests/**/*.test.ts",
-    "**/?(*.)+(spec|test).mts",
-  ],
-  moduleFileExtensions: [
-    "js",
-    "mjs",
-    "cjs",
-    "jsx",
-    "ts",
-    "mts",
-    "tsx",
-    "json",
-    "node",
-  ],
+  testMatch: ["**/tests/**/*.test.mts", "**/tests/**/*.test.ts", "**/?(*.)+(spec|test).mts"],
+  moduleFileExtensions: ["js", "mjs", "cjs", "jsx", "ts", "mts", "tsx", "json", "node"],
   globals: {
     "ts-jest": {
       useESM: true,

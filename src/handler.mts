@@ -1,9 +1,9 @@
-import type { SQSEvent, SQSRecord, Context } from "aws-lambda";
+import type { SQSEvent, Context } from "aws-lambda";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { parse } from "csv-parse";
 import { Pool } from "pg";
 // Use the promise-native pipeline available in Node 16.7+/18+/20
-import { pipeline } from 'stream/promises';
+import { pipeline } from "stream/promises";
 
 // Environment/config expectations (set in Lambda configuration):
 // - PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD
@@ -27,10 +27,7 @@ const pool = new Pool({
   max: process.env.PGPOOL_MAX ? Number(process.env.PGPOOL_MAX) : 5,
 });
 
-async function insertBatch(
-  client: import("pg").PoolClient,
-  rows: unknown[],
-): Promise<void> {
+async function insertBatch(client: import("pg").PoolClient, rows: unknown[]): Promise<void> {
   if (rows.length === 0) return;
 
   // We'll insert each row as JSONB into a single `data` column.
@@ -63,15 +60,13 @@ async function processS3Object(bucket: string, key: string): Promise<number> {
   try {
     await client.query("BEGIN");
 
-  // We'll read from parser as async iterator
-  // pipeline body -> parser ensures proper stream handling
-  // Start the pipeline and keep its promise so we can await it later and surface stream errors.
-  const pipelinePromise = pipeline(body as NodeJS.ReadableStream, parser);
+    // We'll read from parser as async iterator
+    // pipeline body -> parser ensures proper stream handling
+    // Start the pipeline and keep its promise so we can await it later and surface stream errors.
+    const pipelinePromise = pipeline(body as NodeJS.ReadableStream, parser);
 
     let batch: unknown[] = [];
-    for await (const record of parser as AsyncIterable<
-      Record<string, string>
-    >) {
+    for await (const record of parser as AsyncIterable<Record<string, string>>) {
       batch.push(record);
       if (batch.length >= BATCH_SIZE) {
         await insertBatch(client, batch);
@@ -98,12 +93,9 @@ async function processS3Object(bucket: string, key: string): Promise<number> {
   }
 }
 
-export const handler = async (
-  event: SQSEvent,
-  _context: Context,
-): Promise<void> => {
+export const handler = async (event: SQSEvent, _context: Context): Promise<void> => {
   // Process SQS records sequentially to make DB transactions simpler; can be parallelized if you want higher throughput.
-  for (const record of event.Records as SQSRecord[]) {
+  for (const record of event.Records) {
     let parsed: any;
     try {
       parsed = JSON.parse(record.body);

@@ -1,130 +1,103 @@
-# TypeScript ESM Lambda example
+# TypeScript ESM Lambda Example
 
-This small example shows an AWS Lambda handler written in TypeScript using ESM (.mts) that receives SQS events where each SQS message body is an S3 notification event.
+A production-ready AWS Lambda template using TypeScript with ECMAScript Modules (ESM), featuring
+S3-to-PostgreSQL CSV processing, comprehensive testing, and automated code quality workflows.
 
-Files added
+## Features
 
-- `tsconfig.json` — TypeScript configuration using NodeNext/ESM and output to `dist`
-- `src/handler.mts` — ESM Lambda handler; parses SQS message bodies as S3 events and logs bucket/key
+- **TypeScript with ESM**: Native ES modules using `.mts` extension and `NodeNext` module resolution
+- **AWS SDK v3**: Modern AWS integrations with S3, SQS event handling
+- **PostgreSQL Integration**: Batch CSV ingestion from S3 to PostgreSQL
+- **Production-Ready**: Error handling, retries, configurable batch processing
+- **Code Quality**: Pre-commit hooks, ESLint, Prettier, automated CI/CD
+- **Type Safety**: Full TypeScript types with AWS Lambda event definitions
+- **Testing**: Jest with ESM support and AWS SDK mocking
 
-Build & test
+## Prerequisites
 
-1. Install deps:
+- **Node.js** >= 20 (Lambda runtime: `nodejs20.x`)
+- **npm** >= 9
+- **PostgreSQL** (for local development and testing)
+- **AWS Account** (for deployment)
+
+## Quick Start
+
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-1. Build (emit JS to `dist`):
+### Build
+
+Compile TypeScript to JavaScript in the `dist/` directory:
 
 ```bash
 npm run build
 ```
 
-Notes
-
-- The handler expects each SQS message body to be the S3 event JSON (the shape S3 sends when configured to send notifications to SQS).
-- If you want Lambda to fail and cause the SQS message to be retried, rethrow an error from the handler instead of catching JSON parse errors.
-
-## TypeScript Lambda Example
-
-This folder contains a small, opinionated TypeScript project scaffold suitable for AWS Lambda functions.
-
-Files created
-
-- `src/handler.ts` — example Lambda handler and `processEvent` helper
-- `src/utils/logger.ts` — tiny logging wrapper
-- `tests/handler.test.ts` — Jest test for `processEvent`
-- `tsconfig.json` — TypeScript config
-- `jest.config.js` — Jest + ts-jest configuration
-- `package.json` — build/test scripts
-
-Getting started
-
-Prerequisites: Node >= 20 (Lambda runtime: nodejs20.x), npm
-
-Install dependencies
-
-```bash
-cd typescript-lambda-example
-npm install
-```
-
-Build
-
-```bash
-npm run build
-```
-
-Run tests
+### Run Tests
 
 ```bash
 npm test
+
+# Watch mode for development
+npm run test:dev
 ```
 
-Lint and format
+### Lint and Format
 
 ```bash
+# Lint code
 npm run lint
+
+# Format code
 npm run format
 ```
 
-Continuous Integration
+## Project Structure
 
-A GitHub Actions workflow is included at `.github/workflows/ci.yml` — it runs install, build, lint and tests on push/PR for Node 20.
-
-Packaging for Lambda
-
-Simple manual flow:
-
-1. npm run build
-2. Zip the `dist/` contents and any runtime `node_modules` (if you added dependencies) and upload to Lambda.
-
-Example (UNIX / WSL / Git Bash):
-
-```bash
-cd typescript-lambda-example
-npm run build
-zip -r lambda-package.zip dist node_modules package.json
+```text
+typescript-lambda-example/
+├── src/
+│   ├── handler.mts          # Main Lambda handler for SQS/S3 events
+│   └── s3-to-mssql.mts      # S3 CSV to PostgreSQL pipeline
+├── tests/
+│   └── handler.test.mts     # Jest tests with AWS SDK mocks
+├── .github/workflows/       # CI/CD automation
+├── dist/                    # Compiled JavaScript output
+├── tsconfig.json            # TypeScript ESM configuration
+├── jest.config.cjs          # Jest configuration for ESM
+├── .eslintrc.json           # ESLint rules
+├── .prettierrc              # Prettier formatting
+└── package.json             # Dependencies and scripts
 ```
 
-If you use Windows PowerShell, use the native Compress-Archive cmdlet instead.
+## Lambda Handler
 
-Notes
+The main handler (`src/handler.mts`) processes SQS events where each message contains S3 event
+notifications. It:
 
-- This scaffold intentionally includes devDependency-only developer tooling. Add runtime packages to `dependencies` when you need them (for example AWS SDK v3 modules like `@aws-sdk/client-s3`).
-- The `handler` entrypoint is `dist/handler.js` after building. Integrate with Terraform/SAM/CDK as needed.
+1. Parses SQS messages and extracts S3 event details
+2. Fetches CSV files from S3
+3. Streams and parses CSV data
+4. Batch inserts rows into PostgreSQL
+5. Handles errors with configurable retry logic
 
-## S3 -> SQS -> Lambda example
+### Environment Variables
 
-This project includes a simple Lambda handler implemented in `src/handler.ts`.
-It is designed to be triggered by SQS where each SQS message body contains an
-S3 event notification. The handler parses the SQS body (and an SNS envelope
-if present), decodes URL-encoded S3 object keys, and demonstrates fetching the
-object with `@aws-sdk/client-s3`.
+Configure these in your Lambda function:
 
-ESM and typings
+- `PGHOST` — PostgreSQL host
+- `PGPORT` — PostgreSQL port (default: 5432)
+- `PGDATABASE` — Database name
+- `PGUSER` — Database user
+- `PGPASSWORD` — Database password
+- `TABLE_NAME` — Target table (default: `csv_raw_rows`)
+- `BATCH_SIZE` — Insert batch size (default: 100)
+- `THROW_ON_ERROR` — Throw on DB errors for SQS retry (default: `true`)
 
-- This project uses Node ESM semantics: `package.json` contains `"type": "module"`.
-- TypeScript is configured with `module: "NodeNext"` and `moduleResolution: "nodenext"` in `tsconfig.json`.
-- Because of `nodenext` resolution, local imports need explicit file extensions in source files (for example `import { foo } from './bar.js'`). TypeScript will resolve `.ts` during compile and will emit `.js` imports for runtime.
-- Event typings come from `@types/aws-lambda` (you'll see `S3Event` and `SQSEvent` used in `src/handler.ts`).
-
-Build and test locally
-
-```bash
-cd typescript-lambda-example
-npm install
-npm run build
-npm test
-```
-
-- Deployment notes
-
-- The compiled Lambda entrypoint is `dist/handler.js`. Deploy to a Node 20 runtime (`nodejs20.x`) that supports ESM. Ensure your deployment tooling preserves the package layout and `package.json` `type` field.
-- For large objects, stream processing is recommended rather than loading the full object into memory.
-
-Example S3 notification JSON structure expected in the SQS message body:
+### Example S3 Event Structure
 
 ```json
 {
@@ -134,9 +107,134 @@ Example S3 notification JSON structure expected in the SQS message body:
       "eventSource": "aws:s3",
       "s3": {
         "bucket": { "name": "my-bucket" },
-        "object": { "key": "path/to/object.csv" }
+        "object": { "key": "data/file.csv" }
       }
     }
   ]
 }
 ```
+
+## TypeScript and ESM
+
+This project uses **ECMAScript Modules** with TypeScript:
+
+- Source files use `.mts` extension
+- `package.json` sets `"type": "module"`
+- `tsconfig.json` uses `"module": "NodeNext"` and `"moduleResolution": "NodeNext"`
+- Local imports require explicit `.mjs` extensions
+
+### Example Import
+
+```typescript
+import type { SQSEvent } from "aws-lambda";
+import { S3Client } from "@aws-sdk/client-s3";
+import { myFunction } from "./utils.mjs"; // Note .mjs extension
+```
+
+## Development Workflow
+
+### Pre-commit Hooks
+
+Install pre-commit hooks to automatically check code quality:
+
+```bash
+pre-commit install
+```
+
+Hooks run on every commit:
+
+- ESLint (TypeScript linting)
+- Prettier (code formatting)
+- Markdown linting
+- YAML validation
+- Trailing whitespace and EOF fixes
+
+### Manual Pre-commit Checks
+
+```bash
+# Run all hooks
+pre-commit run --all-files
+
+# Run specific hook
+pre-commit run eslint --all-files
+```
+
+## Deployment
+
+### Package for Lambda
+
+Create a deployment package with compiled code and dependencies:
+
+```bash
+npm run build
+zip -r lambda-package.zip dist node_modules package.json
+```
+
+**Windows PowerShell:**
+
+```powershell
+npm run build
+Compress-Archive -Path dist, node_modules, package.json `
+  -DestinationPath lambda-package.zip
+```
+
+### Lambda Configuration
+
+- **Runtime**: `nodejs20.x`
+- **Handler**: `dist/handler.handler`
+- **Architecture**: `x86_64` or `arm64`
+- **Memory**: 512 MB (adjust based on CSV size)
+- **Timeout**: 300 seconds (adjust for large files)
+- **Environment**: Set PostgreSQL and processing variables
+
+### Terraform Example
+
+```hcl
+resource "aws_lambda_function" "csv_processor" {
+  filename         = "lambda-package.zip"
+  function_name    = "s3-csv-to-postgres"
+  role            = aws_iam_role.lambda_role.arn
+  handler         = "dist/handler.handler"
+  runtime         = "nodejs20.x"
+  timeout         = 300
+  memory_size     = 512
+
+  environment {
+    variables = {
+      PGHOST         = var.db_host
+      PGDATABASE     = var.db_name
+      TABLE_NAME     = "csv_data"
+      BATCH_SIZE     = "100"
+    }
+  }
+}
+```
+
+## CI/CD
+
+GitHub Actions workflows automate quality checks:
+
+- **CI**: Build, test, lint on every push/PR
+- **Code Quality**: ESLint, Prettier, TypeScript type checking
+- **Security**: CodeQL analysis, dependency audits
+- **Semantic Release**: Automated versioning and changelogs
+
+## Contributing
+
+1. Create a feature branch
+2. Make changes with semantic commit messages (e.g., `feat:`, `fix:`)
+3. Ensure tests pass: `npm test`
+4. Ensure linting passes: `npm run lint`
+5. Submit pull request
+
+## Resources
+
+- [Development Guide](./DEVELOPMENT.md)
+- [Changelog](./CHANGELOG.md)
+- [AWS Lambda TypeScript](https://docs.aws.amazon.com/lambda/latest/dg/lambda-typescript.html)
+- [TypeScript ESM](https://www.typescriptlang.org/docs/handbook/esm-node.html)
+- [AWS SDK for JavaScript v3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/)
+
+## License
+
+See [LICENSE](./LICENSE) for details.

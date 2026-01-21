@@ -1,4 +1,4 @@
-import type { SQSEvent, SQSRecord, Context } from "aws-lambda";
+import type { SQSEvent, Context } from "aws-lambda";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import csv from "csv-parser";
 import * as sql from "mssql";
@@ -91,25 +91,21 @@ async function processS3Object(bucket: string, key: string): Promise<number> {
   const parser = csv();
   const pipePromise = pipeline(body, parser);
 
-  try {
-    for await (const record of parser as AsyncIterable<Record<string, string>>) {
-      const jsonRow = JSON.stringify(record);
-      // insert single row as a bulk operation with one row
-      await insertBatch(pool, [jsonRow]);
-      totalInserted += 1;
-    }
-
-    // await pipeline completion to propagate stream errors
-    await pipePromise;
-
-    return totalInserted;
-  } catch (err) {
-    throw err;
+  for await (const record of parser as AsyncIterable<Record<string, string>>) {
+    const jsonRow = JSON.stringify(record);
+    // insert single row as a bulk operation with one row
+    await insertBatch(pool, [jsonRow]);
+    totalInserted += 1;
   }
+
+  // await pipeline completion to propagate stream errors
+  await pipePromise;
+
+  return totalInserted;
 }
 
 export const handler = async (event: SQSEvent, _context: Context): Promise<void> => {
-  for (const record of event.Records as SQSRecord[]) {
+  for (const record of event.Records) {
     let parsed: any;
     try {
       parsed = JSON.parse(record.body);

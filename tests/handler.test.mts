@@ -22,9 +22,7 @@ describe("handler ESM tests", () => {
     // stub Pool.prototype.connect to return our fake client
     const pg = await import("pg");
     // pg may be a namespace with Pool on it
-    poolConnectStub = sinon
-      .stub(pg.Pool.prototype, "connect")
-      .resolves(fakeClient);
+    poolConnectStub = sinon.stub(pg.Pool.prototype, "connect").resolves(fakeClient);
 
     process.env.PGDATABASE = "testdb";
     process.env.PGHOST = "localhost";
@@ -61,14 +59,13 @@ describe("handler ESM tests", () => {
     const calls = fakeClient.query.getCalls();
     // filter to only INSERT queries since BEGIN/COMMIT are also executed
     const insertCalls = calls.filter(
-      (c: any) =>
-        typeof c.args[0] === "string" && c.args[0].startsWith("INSERT"),
+      (c: any) => typeof c.args[0] === "string" && c.args[0].startsWith("INSERT")
     );
     // Accept either 1 call that inserted all rows, or multiple batched calls. Validate total rows inserted = 3
     expect(insertCalls.length).toBeGreaterThanOrEqual(1);
     const totalInserted = insertCalls.reduce(
       (s: number, c: any) => s + (c.args[1]?.length ?? 0),
-      0,
+      0
     );
     expect(totalInserted).toBe(3);
   });

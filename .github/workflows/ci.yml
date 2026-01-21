@@ -14,33 +14,33 @@ jobs:
         node-version: [18.x, 20.x]
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Build
-        run: npm run build
+    - name: Build
+      run: npm run build
 
-      - name: Lint
-        run: npm run lint
+    - name: Lint
+      run: npm run lint
 
-      - name: Test
-        run: npm test
+    - name: Test
+      run: npm test
 
-      - name: Package Lambda artifact
-        run: |
-          # create a zip containing the built code and runtime deps
-          zip -r lambda-package-${{ matrix.node-version }}.zip dist package.json package-lock.json node_modules || true
-        shell: bash
+    - name: Package Lambda artifact
+      run: |
+        # create a zip containing the built code and runtime deps
+        zip -r lambda-package-${{ matrix.node-version }}.zip dist package.json package-lock.json node_modules || true
+      shell: bash
 
-      - name: Upload Lambda package
-        uses: actions/upload-artifact@v4
-        with:
-          name: lambda-package-${{ matrix.node-version }}
-          path: lambda-package-${{ matrix.node-version }}.zip
+    - name: Upload Lambda package
+      uses: actions/upload-artifact@v4
+      with:
+        name: lambda-package-${{ matrix.node-version }}
+        path: lambda-package-${{ matrix.node-version }}.zip
