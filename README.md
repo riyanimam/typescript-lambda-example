@@ -24,7 +24,7 @@ S3-to-PostgreSQL CSV processing, comprehensive testing, and automated code quali
 
 ## Prerequisites
 
-- **Node.js** >= 20 (Lambda runtime: `nodejs20.x`)
+- **Node.js** >= 20 (Lambda runtime: `nodejs20.x` or `nodejs22.x`)
 - **pnpm** >= 10 (fast, disk-efficient package manager)
 - **PostgreSQL** (for local development and testing)
 - **AWS Account** (for deployment)
