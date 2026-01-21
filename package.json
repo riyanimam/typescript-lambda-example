@@ -14,12 +14,14 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "ci": "npm run build && npm test",
+    "ci": "pnpm run build && pnpm test",
     "prepare": "lefthook install"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20",
+    "pnpm": ">=8"
   },
+  "packageManager": "pnpm@9.15.4",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.515.0",
     "csv-parse": "^5.4.0",

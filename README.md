@@ -25,7 +25,7 @@ S3-to-PostgreSQL CSV processing, comprehensive testing, and automated code quali
 ## Prerequisites
 
 - **Node.js** >= 20 (Lambda runtime: `nodejs20.x`)
-- **npm** >= 9
+- **pnpm** >= 8 (fast, disk-efficient package manager)
 - **PostgreSQL** (for local development and testing)
 - **AWS Account** (for deployment)
 
@@ -34,7 +34,7 @@ S3-to-PostgreSQL CSV processing, comprehensive testing, and automated code quali
 ### Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Build
@@ -42,29 +42,29 @@ npm install
 Compile TypeScript to JavaScript in the `dist/` directory:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Run Tests
 
 ```bash
-npm test
+pnpm test
 
 # Watch mode for development
-npm run test:watch
+pnpm run test:watch
 ```
 
 ### Lint and Format
 
 ```bash
 # Check code with Biome
-npm run lint
+pnpm run lint
 
 # Auto-fix issues
-npm run lint:fix
+pnpm run lint:fix
 
 # Format code
-npm run format
+pnpm run format
 ```
 
 ## Project Structure
@@ -147,7 +147,7 @@ import { myFunction } from "./utils.mjs"; // Note .mjs extension
 
 ### Git Hooks with Lefthook
 
-Git hooks are automatically installed when you run `npm install`. They will:
+Git hooks are automatically installed when you run `pnpm install`. They will:
 
 **Pre-commit:**
 
@@ -179,14 +179,14 @@ npx lefthook run pre-push
 Create a deployment package with compiled code and dependencies:
 
 ```bash
-npm run build
+pnpm run build
 zip -r lambda-package.zip dist node_modules package.json
 ```
 
 **Windows PowerShell:**
 
 ```powershell
-npm run build
+pnpm run build
 Compress-Archive -Path dist, node_modules, package.json `
   -DestinationPath lambda-package.zip
 ```
@@ -236,8 +236,8 @@ GitHub Actions workflows automate quality checks:
 
 1. Create a feature branch
 2. Make changes with semantic commit messages (e.g., `feat:`, `fix:`)
-3. Ensure tests pass: `npm test`
-4. Ensure linting passes: `npm run lint`
+3. Ensure tests pass: `pnpm test`
+4. Ensure linting passes: `pnpm run lint`
 5. Submit pull request
 
 ## Resources

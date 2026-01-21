@@ -5,7 +5,7 @@ This guide covers local development setup and workflows for the TypeScript Lambd
 ## Prerequisites
 
 - **Node.js** >= 20 (LTS recommended)
-- **npm** >= 9
+- **pnpm** >= 8 (install with `npm install -g pnpm`)
 - **Git** >= 2.30
 
 ## Getting Started
@@ -15,12 +15,12 @@ This guide covers local development setup and workflows for the TypeScript Lambd
 ```bash
 git clone <repository-url>
 cd typescript-lambda-example
-npm install
+pnpm install
 ```
 
 ### 2. Install Git Hooks (Automatic)
 
-Lefthook hooks are automatically installed during `npm install` via the `prepare` script.
+Lefthook hooks are automatically installed during `pnpm install` via the `prepare` script.
 
 To manually install or update hooks:
 
@@ -31,7 +31,7 @@ npx lefthook install
 ### 3. Build the Project
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 TypeScript files in `src/` are compiled to JavaScript in `dist/` using the ESM module system.
@@ -42,13 +42,13 @@ TypeScript files in `src/` are compiled to JavaScript in `dist/` using the ESM m
 
 ```bash
 # Run all tests
-npm test
+pnpm test
 
 # Run tests in watch mode
-npm run test:watch
+pnpm run test:watch
 
 # Run tests with coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ### Code Quality
@@ -59,16 +59,16 @@ Biome is an all-in-one toolchain that handles linting, formatting, and import or
 
 ```bash
 # Check for issues (linting + formatting)
-npm run lint
+pnpm run lint
 
 # Auto-fix issues
-npm run lint:fix
+pnpm run lint:fix
 
 # Format code only
-npm run format
+pnpm run format
 
 # Check formatting without changes
-npm run format:check
+pnpm run format:check
 ```
 
 ### Manual Pre-commit Checks
@@ -123,10 +123,10 @@ import { myFunction } from "./utils.mjs"; // Note .mjs extension
 
 ```bash
 # Production dependency
-npm install <package-name>
+pnpm add <package-name>
 
 # Development dependency
-npm install --save-dev <package-name>
+pnpm add -D <package-name>
 ```
 
 ### Creating a New Lambda Handler

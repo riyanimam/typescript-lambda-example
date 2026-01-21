@@ -19,6 +19,6 @@ pre-commit:
 pre-push:
   commands:
     tests:
-      run: npm test
+      run: npx pnpm test
     build:
-      run: npm run build
+      run: npx pnpm run build

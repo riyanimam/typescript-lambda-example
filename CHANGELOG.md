@@ -10,6 +10,10 @@ and this project adheres to
 
 ### Changed
 
+- **Migrated from npm to pnpm** for faster, more efficient package management
+- Updated all documentation to use pnpm commands
+- Updated all CI/CD workflows to use pnpm
+- Updated git hooks to use pnpm
 - Replaced ESLint and Prettier with Biome for unified linting and formatting
 - Replaced Jest with Vitest for faster, native ESM testing
 - Replaced Python pre-commit with Lefthook (Node.js-based git hooks)
