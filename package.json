@@ -49,5 +49,10 @@
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vitest": "^4.0.17"
+  },
+  "pnpm": {
+    "overrides": {
+      "@azure/identity": ">=4.2.1"
+    }
   }
 }
