@@ -18,11 +18,11 @@ const THROW_ON_ERROR = process.env.THROW_ON_ERROR !== "false";
 const s3 = new S3Client({});
 
 const poolConfig: sql.config = {
-  server: process.env.MSSQL_SERVER,
+  server: process.env.MSSQL_SERVER || "",
   port: process.env.MSSQL_PORT ? Number(process.env.MSSQL_PORT) : undefined,
-  user: process.env.MSSQL_USER,
-  password: process.env.MSSQL_PASSWORD,
-  database: process.env.MSSQL_DATABASE,
+  user: process.env.MSSQL_USER || "",
+  password: process.env.MSSQL_PASSWORD || "",
+  database: process.env.MSSQL_DATABASE || "",
   options: {
     // adjust encryption/trust based on your environment
     encrypt: process.env.MSSQL_ENCRYPT ? process.env.MSSQL_ENCRYPT === "true" : true,
