@@ -28,7 +28,7 @@
     "pg": "^8.11.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.3.11",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^11.1.0",
     "@semantic-release/git": "^10.0.1",
@@ -39,13 +39,13 @@
     "@types/mssql": "^9.1.9",
     "@types/node": "^20.19.24",
     "@types/pg": "^8.6.7",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^4.0.17",
     "aws-sdk-client-mock": "^4.1.0",
-    "lefthook": "^1.9.3",
+    "lefthook": "^2.0.15",
     "markdownlint-cli": "^0.47.0",
     "semantic-release": "^23.0.0",
     "typescript": "^5.9.3",
-    "vite": "^6.0.7",
-    "vitest": "^2.1.8"
+    "vite": "^7.3.1",
+    "vitest": "^4.0.17"
   }
 }
