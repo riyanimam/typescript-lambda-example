@@ -47,6 +47,7 @@
     "@types/pg": "^8.6.7",
     "@vitest/coverage-v8": "^4.0.17",
     "aws-sdk-client-mock": "^4.1.0",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
     "lefthook": "^2.0.15",
     "markdownlint-cli": "^0.47.0",
     "semantic-release": "^23.0.0",
