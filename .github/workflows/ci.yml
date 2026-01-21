@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Build
+      run: pnpm run build
+
+    - name: Lint
+      run: pnpm run lint
+
+    - name: Test
+      run: pnpm test
+
+    - name: Package Lambda artifact
+      run: |
+        # create a zip containing the built code and runtime deps
+        zip -r lambda-package-${{ matrix.node-version }}.zip dist package.json pnpm-lock.yaml node_modules || true
+      shell: bash
+
+    - name: Upload Lambda package
+      uses: actions/upload-artifact@v4
+      with:
+        name: lambda-package-${{ matrix.node-version }}
+        path: lambda-package-${{ matrix.node-version }}.zip

@@ -1,0 +1,58 @@
+{
+  "name": "typescript-lambda-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/handler.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist node_modules",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "ci": "pnpm run build && pnpm test",
+    "prepare": "lefthook install"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
+  },
+  "packageManager": "pnpm@10.28.1",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.515.0",
+    "csv-parse": "^5.4.0",
+    "csv-parser": "^3.0.0",
+    "mssql": "^9.2.1",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^11.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.6",
+    "@semantic-release/npm": "^11.0.2",
+    "@semantic-release/release-notes-generator": "^12.1.0",
+    "@types/aws-lambda": "^8.10.157",
+    "@types/mssql": "^9.1.9",
+    "@types/node": "^20.19.24",
+    "@types/pg": "^8.6.7",
+    "@vitest/coverage-v8": "^4.0.17",
+    "aws-sdk-client-mock": "^4.1.0",
+    "lefthook": "^2.0.15",
+    "markdownlint-cli": "^0.47.0",
+    "semantic-release": "^23.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.17"
+  },
+  "pnpm": {
+    "overrides": {
+      "@azure/identity": ">=4.2.1"
+    }
+  }
+}

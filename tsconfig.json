@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node", "aws-lambda"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.mts", "src/handler.mts"],
+  "exclude": ["node_modules", "dist"]
+}
