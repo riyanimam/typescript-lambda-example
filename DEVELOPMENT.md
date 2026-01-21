@@ -5,7 +5,7 @@ This guide covers local development setup and workflows for the TypeScript Lambd
 ## Prerequisites
 
 - **Node.js** >= 20 (LTS recommended)
-- **pnpm** >= 8 (install with `npm install -g pnpm`)
+- **pnpm** >= 10 (install with `npm install -g pnpm`)
 - **Git** >= 2.30
 
 ## Getting Started

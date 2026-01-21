@@ -10,6 +10,7 @@ and this project adheres to
 
 ### Changed
 
+- **Updated to pnpm 10.28.1** (latest version) for improved performance and features
 - **Migrated from npm to pnpm** for faster, more efficient package management
 - Updated all documentation to use pnpm commands
 - Updated all CI/CD workflows to use pnpm
