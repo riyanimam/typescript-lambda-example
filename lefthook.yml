@@ -7,6 +7,7 @@ pre-commit:
       stage_fixed: true
     markdown-lint:
       glob: "*.md"
+      exclude: "CHANGELOG.md"
       run: npx markdownlint --config .markdownlintrc.json --fix {staged_files}
       stage_fixed: true
     trailing-whitespace:
